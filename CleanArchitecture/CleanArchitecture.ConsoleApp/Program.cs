@@ -7,7 +7,9 @@ Console.WriteLine("Hello, World!");
 
 
 StreamerDbContext dbContext = new();
-await QueryFilter();
+//await QueryFilter();
+await QueryMethods();
+
 Console.WriteLine("Presione Cualquier tecla para continuar");
 
 
@@ -55,7 +57,7 @@ Console.WriteLine("Presione Cualquier tecla para continuar");
 //await dbContext.SaveChangesAsync();
 
 
-async Task QueryFilter() 
+async Task QueryFilter()
 {
     Console.WriteLine($"Ingrese una compania de streaming");
 
@@ -65,7 +67,7 @@ async Task QueryFilter()
 
     foreach (var streamer in streamers)
     {
-        Console.WriteLine($"{ streamer.Id } - { streamer.Nombre }");
+        Console.WriteLine($"{streamer.Id} - {streamer.Nombre}");
     }
 
     //var streamerPartialResult = await dbContext!.Streamers!.Where(x => x.Nombre!.Contains(streamingNombre)).ToListAsync();
@@ -75,4 +77,23 @@ async Task QueryFilter()
     {
         Console.WriteLine($"{streamer.Id} - {streamer.Nombre}");
     }
+}
+
+async Task QueryMethods()
+{
+    var streamer = dbContext.Streamers!;
+   
+    var firstAsync = await streamer.Where(y => y.Nombre!.Contains("a")).FirstAsync();
+    
+    var firstOrDefaultAsync = await streamer.Where(y => y.Nombre!.Contains("a")).FirstOrDefaultAsync();
+   
+    var firstOrDefaultAsync_2 = await streamer.FirstOrDefaultAsync(y => y.Nombre!.Contains("a"));
+
+    //disparará una excepcion al momento de no encontrar un resultado
+    var singleAsync = await streamer.Where(y => y.Id == 1).SingleAsync();
+
+    //no disparará una excepcion al momento de no encontrar un resultado
+    var singleAsyncOrDefaultAsync = await streamer.Where(y => y.Id == 1).SingleOrDefaultAsync();
+
+    var resultado = await streamer.FindAsync(1);
 }
