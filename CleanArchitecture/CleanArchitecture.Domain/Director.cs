@@ -6,5 +6,8 @@ namespace CleanArchitecture.Domain
     {
         public string? Nombre { get; set; }
         public string? Apellido { get; set; }
+
+        public int VideoId { get; set; }
+        public virtual Video? Video { get; set; }
     }
 }

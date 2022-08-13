@@ -10,7 +10,10 @@ StreamerDbContext dbContext = new();
 //await QueryFilter();
 //await QueryMethods();
 //await QueryLinq();
-await TrackinAndNotTracking();
+//await TrackinAndNotTracking();
+//await AddNewStreamerWithVieo();
+//await AddNewVideoWithVideo();
+await AddNewDirectorWithVideo();
 
 Console.WriteLine("Presione Cualquier tecla para continuar");
 Console.ReadKey();
@@ -129,4 +132,67 @@ async Task TrackinAndNotTracking()
     streamerWithNotTracking.Nombre = "Amazon Plus";
 
     await dbContext!.SaveChangesAsync();
+}
+
+async Task AddNewStreamerWithVieo() 
+{
+    var pantaya = new Streamer
+    {
+        Nombre = "Pantaya"
+    };
+
+    var hungerGames = new Video
+    {
+        Nombre = "Hunger Games",
+        Streamer = pantaya,
+    };
+
+    await dbContext.AddAsync(hungerGames);
+    await dbContext.SaveChangesAsync();
+}
+
+async Task AddNewStreamerWithVieoId()
+{
+    var batmanForever = new Video
+    {
+        Nombre = "batman forever",
+        StreamerId = 3,
+    };
+
+    await dbContext.AddAsync(batmanForever);
+    await dbContext.SaveChangesAsync();
+}
+
+async Task AddNewVideoWithVideo()
+{
+    var actor = new Actor
+    {
+        Nombre = "Brad",
+        Apellido = "Pitt"
+    };
+
+    await dbContext.AddAsync(actor);
+    await dbContext.SaveChangesAsync();
+
+    var videoActor = new VideosActor
+    {
+        ActorId = actor.Id,
+        VideoId = 6
+    };
+
+    await dbContext.AddAsync(videoActor);
+    await dbContext.SaveChangesAsync();
+}
+
+async Task AddNewDirectorWithVideo() 
+{
+    var director = new Director
+    {
+        Nombre = "Lorenzo",
+        Apellido = "Basteri",
+        VideoId = 6
+    };
+
+    await dbContext.AddAsync(director);
+    await dbContext.SaveChangesAsync();
 }
