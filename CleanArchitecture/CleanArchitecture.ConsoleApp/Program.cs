@@ -9,10 +9,11 @@ Console.WriteLine("Hello, World!");
 StreamerDbContext dbContext = new();
 //await QueryFilter();
 //await QueryMethods();
-await QueryLinq();
+//await QueryLinq();
+await TrackinAndNotTracking();
 
 Console.WriteLine("Presione Cualquier tecla para continuar");
-
+Console.ReadKey();
 
 //Streamer streamer = new()
 //{
@@ -83,11 +84,11 @@ async Task QueryFilter()
 async Task QueryMethods()
 {
     var streamer = dbContext.Streamers!;
-   
+
     var firstAsync = await streamer.Where(y => y.Nombre!.Contains("a")).FirstAsync();
-    
+
     var firstOrDefaultAsync = await streamer.Where(y => y.Nombre!.Contains("a")).FirstOrDefaultAsync();
-   
+
     var firstOrDefaultAsync_2 = await streamer.FirstOrDefaultAsync(y => y.Nombre!.Contains("a"));
 
     //disparará una excepcion al momento de no encontrar un resultado
@@ -99,7 +100,7 @@ async Task QueryMethods()
     var resultado = await streamer.FindAsync(1);
 }
 
-async Task QueryLinq() 
+async Task QueryLinq()
 {
     //var streamers = await (from i in dbContext.Streamers
     //                 select i).ToListAsync();
@@ -115,4 +116,17 @@ async Task QueryLinq()
     {
         Console.WriteLine($"{streamer.Id} - {streamer.Nombre}");
     }
+}
+
+async Task TrackinAndNotTracking()
+{
+    var streamerWithTracking = await dbContext!.Streamers!.FirstOrDefaultAsync(x => x.Id == 1);
+
+    //no se podra actualizar el objeto ya que no quedará almacenado en memoria
+    var streamerWithNotTracking = await dbContext!.Streamers!.AsNoTracking().FirstOrDefaultAsync(x => x.Id == 2);
+
+    streamerWithTracking.Nombre = "Netflix Super";
+    streamerWithNotTracking.Nombre = "Amazon Plus";
+
+    await dbContext!.SaveChangesAsync();
 }
