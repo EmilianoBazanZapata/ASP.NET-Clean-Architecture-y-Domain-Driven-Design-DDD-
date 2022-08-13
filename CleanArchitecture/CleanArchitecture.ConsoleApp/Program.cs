@@ -14,7 +14,7 @@ StreamerDbContext dbContext = new();
 //await AddNewStreamerWithVieo();
 //await AddNewVideoWithVideo();
 //await AddNewDirectorWithVideo();
-await MultipleEntitiesQuery();
+//await MultipleEntitiesQuery();
 
 Console.WriteLine("Presione Cualquier tecla para continuar");
 Console.ReadKey();
