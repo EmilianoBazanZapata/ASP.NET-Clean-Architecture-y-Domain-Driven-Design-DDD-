@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Data
 {
@@ -7,7 +8,11 @@ namespace CleanArchitecture.Data
     {
         protected override void OnConfiguring (DbContextOptionsBuilder optionBuilder) 
         {
-            optionBuilder.UseSqlServer("Data Source=DESKTOP-UHFA848\\SQLEXPRESS;Initial Catalog=StreamerDB;Integrated Security=True");
+            optionBuilder.UseSqlServer("Data Source=DESKTOP-UHFA848\\SQLEXPRESS;Initial Catalog=StreamerDB;Integrated Security=True")
+                         .LogTo(Console.WriteLine, 
+                                        new[] { DbLoggerCategory.Database.Command.Name }, 
+                                        LogLevel.Information)
+                         .EnableSensitiveDataLogging();
         }
 
 
