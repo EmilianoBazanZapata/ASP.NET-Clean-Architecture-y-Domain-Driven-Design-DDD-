@@ -8,7 +8,8 @@ Console.WriteLine("Hello, World!");
 
 StreamerDbContext dbContext = new();
 //await QueryFilter();
-await QueryMethods();
+//await QueryMethods();
+await QueryLinq();
 
 Console.WriteLine("Presione Cualquier tecla para continuar");
 
@@ -61,9 +62,9 @@ async Task QueryFilter()
 {
     Console.WriteLine($"Ingrese una compania de streaming");
 
-    var streamingNombre = Console.ReadLine();
+    var streamerNombre = Console.ReadLine();
     //var streamers = await dbContext!.Streamers!.Where(x => x.Nombre  == streamingNombre).ToListAsync();
-    var streamers = await dbContext!.Streamers!.Where(x => x.Nombre!.Equals(streamingNombre)).ToListAsync();
+    var streamers = await dbContext!.Streamers!.Where(x => x.Nombre!.Equals(streamerNombre)).ToListAsync();
 
     foreach (var streamer in streamers)
     {
@@ -71,7 +72,7 @@ async Task QueryFilter()
     }
 
     //var streamerPartialResult = await dbContext!.Streamers!.Where(x => x.Nombre!.Contains(streamingNombre)).ToListAsync();
-    var streamerPartialResult = await dbContext!.Streamers!.Where(x => EF.Functions.Like(x.Nombre!, $"%{streamingNombre}%")).ToListAsync();
+    var streamerPartialResult = await dbContext!.Streamers!.Where(x => EF.Functions.Like(x.Nombre!, $"%{streamerNombre}%")).ToListAsync();
 
     foreach (var streamer in streamerPartialResult)
     {
@@ -96,4 +97,22 @@ async Task QueryMethods()
     var singleAsyncOrDefaultAsync = await streamer.Where(y => y.Id == 1).SingleOrDefaultAsync();
 
     var resultado = await streamer.FindAsync(1);
+}
+
+async Task QueryLinq() 
+{
+    //var streamers = await (from i in dbContext.Streamers
+    //                 select i).ToListAsync();
+    Console.WriteLine($"Ingrese una compania de streaming");
+
+    var streamerNombre = Console.ReadLine();
+
+    var streamers = await (from i in dbContext.Streamers
+                           where EF.Functions.Like(i.Nombre, $"%{streamerNombre}%")
+                           select i).ToListAsync();
+
+    foreach (var streamer in streamers)
+    {
+        Console.WriteLine($"{streamer.Id} - {streamer.Nombre}");
+    }
 }
