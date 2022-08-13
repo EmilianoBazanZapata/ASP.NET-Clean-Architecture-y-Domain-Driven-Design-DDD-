@@ -13,7 +13,8 @@ StreamerDbContext dbContext = new();
 //await TrackinAndNotTracking();
 //await AddNewStreamerWithVieo();
 //await AddNewVideoWithVideo();
-await AddNewDirectorWithVideo();
+//await AddNewDirectorWithVideo();
+await MultipleEntitiesQuery();
 
 Console.WriteLine("Presione Cualquier tecla para continuar");
 Console.ReadKey();
@@ -134,7 +135,7 @@ async Task TrackinAndNotTracking()
     await dbContext!.SaveChangesAsync();
 }
 
-async Task AddNewStreamerWithVieo() 
+async Task AddNewStreamerWithVieo()
 {
     var pantaya = new Streamer
     {
@@ -184,7 +185,7 @@ async Task AddNewVideoWithVideo()
     await dbContext.SaveChangesAsync();
 }
 
-async Task AddNewDirectorWithVideo() 
+async Task AddNewDirectorWithVideo()
 {
     var director = new Director
     {
@@ -195,4 +196,25 @@ async Task AddNewDirectorWithVideo()
 
     await dbContext.AddAsync(director);
     await dbContext.SaveChangesAsync();
+}
+
+async Task MultipleEntitiesQuery()
+{
+    //var videoWithActores = await dbContext!.Videos!.Include(v => v.Actores).FirstOrDefaultAsync(v => v.Id == 6);
+
+    //var actor = await dbContext!.Actores!.Select(a => a.Nombre).ToListAsync();
+
+    var videoWithDirector = await dbContext!.Videos!
+                                            .Where(v => v.Director != null)
+                                            .Include(v => v.Director)
+                                            .Select(v => new
+                                            {
+                                                Director_Nombre_Completo = $"{v.Director.Nombre} {v.Director.Apellido}",
+                                                Pelicula = v.Nombre
+                                            }).ToListAsync();
+
+    foreach (var movie in videoWithDirector)
+    {
+        Console.WriteLine($"{movie.Pelicula} - {movie.Director_Nombre_Completo}");
+    }
 }
