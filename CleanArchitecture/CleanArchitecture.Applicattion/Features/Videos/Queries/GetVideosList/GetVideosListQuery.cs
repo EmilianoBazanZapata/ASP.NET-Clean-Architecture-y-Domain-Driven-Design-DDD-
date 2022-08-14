@@ -4,7 +4,7 @@ namespace CleanArchitecture.Applicattion.Features.Videos.Queries.GetVideosList
 {
     public class GetVideosListQuery : IRequest<List<VideosVm>>
     {
-        public string _UserName { get; set; }  = String.Empty;
+        public string _UserName { get; set; }  = string.Empty;
 
         public GetVideosListQuery(string userName)
         {
