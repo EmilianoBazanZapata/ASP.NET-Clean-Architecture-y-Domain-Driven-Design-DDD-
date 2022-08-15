@@ -15,6 +15,8 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context = context;
         }
 
+        #region Obtener Información
+
         public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().Where(predicate).ToListAsync();
@@ -62,16 +64,19 @@ namespace CleanArchitecture.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-        public Task<IReadOnlyList<T>> getAsync(Expression<Func<T, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
 
         public async virtual Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
 
+        public async Task<IReadOnlyList<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+        #endregion
+
+        #region Manipular Información
         public async Task<T> AddAsync(T entity)
         {
             _context.Set<T>().Add(entity);
@@ -91,15 +96,6 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<IReadOnlyList<T>> GetAllAsync()
-        {
-            return await _context.Set<T>().ToListAsync();
-        }
-
-        public Task<IReadOnlyList<T>> getAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }
