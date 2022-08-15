@@ -15,7 +15,7 @@ namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.UpdateStrea
 
         public UpdateStreamerCommandHandler(IStreamerRepository streamerRepository,
                                             IMapper mapper,
-                                            ILogger logger)
+                                            ILogger<UpdateStreamerCommandHandler> logger)
         {
             _streamerRepository = streamerRepository;
             _mapper = mapper;
