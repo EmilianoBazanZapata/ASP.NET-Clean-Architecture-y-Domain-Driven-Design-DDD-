@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.UpdateStreamer
 {
-    public class UpdateStreamerCommandHandler : IRequestHandler<UpdateSteamerCommand>
+    public class UpdateStreamerCommandHandler : IRequestHandler<UpdateStreamerCommand>
     {
         private readonly IStreamerRepository _streamerRepository;
         private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.UpdateStrea
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(UpdateSteamerCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateStreamerCommand request, CancellationToken cancellationToken)
         {
             var streamerToUpdate = await _streamerRepository.GetByIdAsync(request.Id);
 
@@ -32,7 +32,7 @@ namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.UpdateStrea
                 throw new NotFoundException(nameof(Streamer), request.Id);
             }
 
-            _mapper.Map(request, streamerToUpdate, typeof(UpdateSteamerCommand), typeof(Streamer));
+            _mapper.Map(request, streamerToUpdate, typeof(UpdateStreamerCommand), typeof(Streamer));
 
             await _streamerRepository.UpdateAsync(streamerToUpdate);
 
