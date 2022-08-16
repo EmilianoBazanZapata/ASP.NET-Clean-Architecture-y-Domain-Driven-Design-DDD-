@@ -11,8 +11,8 @@ namespace CleanArchitecture.Infrastructure.Persistence.Seeds
             if (!context!.Streamers!.Any())
             {
                 context!.Streamers!.AddRange(GetPreconfiguredStreamer());
-                await context!.SaveChangeAsync();
-                logger.LogInformation("Estamos insertando nuevos Records asl db {context}", typeof(StreamerDbContext).nam);
+                await context!.SaveChangesAsync();
+                logger.LogInformation("Estamos insertando nuevos Records asl db {context}", typeof(StreamerDbContext).Name);
             }
         }
 
