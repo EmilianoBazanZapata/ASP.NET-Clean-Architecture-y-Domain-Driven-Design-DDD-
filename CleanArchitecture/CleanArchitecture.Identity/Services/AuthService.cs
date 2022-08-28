@@ -10,13 +10,13 @@ using System.Text;
 
 namespace CleanArchitecture.Identity.Services
 {
-    internal class AuthServices : IAuthService
+    internal class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthServices(UserManager<ApplicationUser> userManager,
+        public AuthService(UserManager<ApplicationUser> userManager,
                                         SignInManager<ApplicationUser> signInManager,
                                         JwtSettings jwtSettings)
         {
