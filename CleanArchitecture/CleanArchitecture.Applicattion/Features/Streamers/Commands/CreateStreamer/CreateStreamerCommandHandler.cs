@@ -10,17 +10,18 @@ namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.CreateStrea
 {
     public class CreateStreamerCommandHandler : IRequestHandler<CreateStreamerCommand, int>
     {
-        private readonly IStreamerRepository _StreamerRepository;
+        //private readonly IStreamerRepository _StreamerRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly ILogger<CreateStreamerCommandHandler> _logger;
 
-        public CreateStreamerCommandHandler(IStreamerRepository streamerRepository,
+        public CreateStreamerCommandHandler(IUnitOfWork unitOfWork,
                                       IMapper mapper,
                                       IEmailService emailService,
                                       ILogger<CreateStreamerCommandHandler> logger)
         {
-            _StreamerRepository = streamerRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _emailService = emailService;
             _logger = logger;
@@ -30,13 +31,22 @@ namespace CleanArchitecture.Applicattion.Features.Streamers.Commands.CreateStrea
         {
             var streamerEntity = _mapper.Map<Streamer>(request);
 
-            var newStreamer = await _StreamerRepository.AddAsync(streamerEntity);
+            //var newStreamer = await _StreamerRepository.AddAsync(streamerEntity);
 
-            _logger.LogInformation($"Streamer {newStreamer.Id} fue creado exitosamente");
+            _unitOfWork.StreamerRepository.AddEntity(streamerEntity);
 
-            await SendEmail(newStreamer);
+            var result = await _unitOfWork.Complete();
 
-            return newStreamer.Id;
+            if (result <= 0)
+            {
+                throw new Exception($"No se pudo ingresar el record de Streamer");
+            }
+
+            _logger.LogInformation($"Streamer {streamerEntity.Id} fue creado exitosamente");
+
+            await SendEmail(streamerEntity);
+
+            return streamerEntity.Id;
         }
 
 
