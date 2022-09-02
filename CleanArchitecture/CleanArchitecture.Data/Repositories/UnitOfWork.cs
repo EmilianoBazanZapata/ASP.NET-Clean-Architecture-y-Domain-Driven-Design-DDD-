@@ -15,9 +15,19 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context = context;
         }
 
+        public StreamerDbContext StreamerDbContext => _context;
+
         public async Task<int> Complete()
         {
-            return await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Err");
+            }
+
         }
 
         public void Dispose()
@@ -27,16 +37,18 @@ namespace CleanArchitecture.Infrastructure.Repositories
 
         public IAsyncRepository<TEntity> Repository<TEntity>() where TEntity : BaseDomainModel
         {
-            if(_repositories is null)
+            if (_repositories == null)
+            {
                 _repositories = new Hashtable();
+            }
 
             var type = typeof(TEntity).Name;
 
-            if (_repositories.ContainsKey(type))
+            if (!_repositories.ContainsKey(type))
             {
-                var repositoryType = typeof(IAsyncRepository<>);
-                var repositoryIntance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _context);
-                _repositories.Add(type, repositoryIntance);
+                var repositoryType = typeof(RepositoryBase<>);
+                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _context);
+                _repositories.Add(type, repositoryInstance);
             }
 
             return (IAsyncRepository<TEntity>)_repositories[type];
